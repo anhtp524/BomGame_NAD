@@ -30,6 +30,7 @@ public class BombermanGame extends Application {
     private List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
     private static String [][] map;
+    private static List<Entity> grass = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -38,6 +39,9 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        //Ten game
+        stage.setTitle("BombermanGame 2.0");
+
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
@@ -112,26 +116,48 @@ public class BombermanGame extends Application {
         for (int row = 0 ; row < HEIGHT ; row++) {
             for ( int col = 0 ; col < WIDTH ; col++) {
                 Entity object;
+                Entity obj;
                 String t = map[row][col];
                 if ( t.equals("#")) {
+                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Wall(col, row, Sprite.wall.getFxImage());
+                    grass.add(obj);
+                    stillObjects.add(object);
                 }
                 else if (t.equals("*")){
+                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Brick(col, row, Sprite.brick.getFxImage());
+                    grass.add(obj);
+                    stillObjects.add(object);
                 }
                 else if (t.equals("x")){
+                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Portal(col, row, Sprite.portal.getFxImage());
+                    grass.add(obj);
+                    stillObjects.add(object);
+
                 }
                 else if (t.equals("1")){
-                    object = new Portal(col, row, Sprite.balloom_left2.getFxImage());
+                    obj = new Grass(col, row, Sprite.grass.getFxImage());
+                    object = new Ballom(col, row, Sprite.balloom_left2.getFxImage());
+                    grass.add(obj);
+                    stillObjects.add(object);
+
                 }
                 else if (t.equals("2")){
-                    object = new Portal(col, row, Sprite.oneal_left2.getFxImage());
+                    obj = new Grass(col, row, Sprite.grass.getFxImage());
+                    object = new Oneal(col, row, Sprite.oneal_left2.getFxImage());
+                    grass.add(obj);
+                    stillObjects.add(object);
+
                 }
                 else {
-                    object = new Grass(col, row, Sprite.grass.getFxImage());
+                    obj = new Grass(col, row, Sprite.grass.getFxImage());
+
+                    grass.add(obj);
                 }
-                stillObjects.add(object);
+
+
             }
         }
     }
@@ -139,11 +165,14 @@ public class BombermanGame extends Application {
 
     public void update() {
         entities.forEach(Entity::update);
+        stillObjects.forEach(Entity::update);
     }
 
     public void render() {
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        stillObjects.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            grass.forEach(g -> g.render(gc));
+            stillObjects.forEach(g -> g.render(gc));
+            entities.forEach(g -> g.render(gc));
     }
+
 }

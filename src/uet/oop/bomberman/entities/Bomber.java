@@ -1,70 +1,92 @@
 package uet.oop.bomberman.entities;
 
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.graphics.Animation;
 
-public class Bomber<scene> extends Entity {
+public class Bomber extends Entity {
+    public static boolean isIsMove = false;
 
-    private boolean isLeft,isRight,isDown,isUp,isSpace;
-    private KeyCode keyCode;
 
+    private final Sprite [] frameleft = {Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2};
+    private final Sprite [] frameright = {Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2};
+    private final Sprite [] frameup = {Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2};
+    private final Sprite [] framedown = {Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2};
+
+    public static boolean isMoveLeft, isMoveRight, isMoveUp, isMoveDown, isPlantBomb;
+    public Animation a = new Animation (frameleft, 4);
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
     }
+    KeyCode keyCode;
+    public double step = 2;
 
     public void input() {
         BombermanGame.scene.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == keyCode.LEFT || keyEvent.getCode() == keyCode.A ) {
-                isLeft = true;
+                isMoveLeft = true;
             }
             if (keyEvent.getCode() == keyCode.RIGHT || keyEvent.getCode() == keyCode.D ) {
-                isRight = true;
+                isMoveRight = true;
             }
             if (keyEvent.getCode() == keyCode.UP || keyEvent.getCode() == keyCode.W) {
-                isUp = true;
+                isMoveUp = true;
             }
             if (keyEvent.getCode() == keyCode.DOWN || keyEvent.getCode() == keyCode.S ) {
-                isDown = true;
+                isMoveDown = true;
             }
             if (keyEvent.getCode() == keyCode.SPACE || keyEvent.getCode() == keyCode.ENTER ) {
-                isSpace = true;
+                isPlantBomb = true;
             }
         });
         BombermanGame.scene.setOnKeyReleased(keyEvent -> {
             if (keyEvent.getCode() == keyCode.LEFT || keyEvent.getCode() == keyCode.A) {
                 this.img = Sprite.player_left.getFxImage();
-                isLeft = false;
+                isMoveLeft = false;
             }
             if (keyEvent.getCode() == keyCode.RIGHT || keyEvent.getCode() == keyCode.D) {
                 this.img = Sprite.player_right.getFxImage();
-                isRight = false;
+                isMoveRight = false;
             }
             if (keyEvent.getCode() == keyCode.UP || keyEvent.getCode() == keyCode.W) {
                 this.img = Sprite.player_up.getFxImage();
-                isUp = false;
+                isMoveUp = false;
             }
             if (keyEvent.getCode() == keyCode.DOWN || keyEvent.getCode() == keyCode.S) {
                 this.img = Sprite.player_down.getFxImage();
-                isDown = false;
+                isMoveDown = false;
             }
             if (keyEvent.getCode() == keyCode.SPACE || keyEvent.getCode() == keyCode.ENTER) {
-                isSpace = false;
+                isPlantBomb = false;
             }
         });
     }
 
-
-    public void move(){
-        if(isUp) this.y--;
-        else if(isDown) this.y++;
-        else if(isLeft) this.x--;
-        else if(isRight) this.x++;
+    public void move() {
+        isIsMove = false;
+        if(isMoveDown) {
+            a.setFrames(framedown);
+            this.y ++;
+            isIsMove = true;
+        }
+        else if(isMoveUp) {
+            a.setFrames(frameup);
+            this.y --;
+            isIsMove = true;
+        }
+        else if(isMoveLeft) {
+            a.setFrames(frameleft);
+            this.x --;
+            isIsMove = true;
+        }
+        else if(isMoveRight) {
+            a.setFrames(frameright);
+            this.x ++;
+            isIsMove = true;
+        }
     }
-
     @Override
     public void update() {
         input();
@@ -73,5 +95,14 @@ public class Bomber<scene> extends Entity {
         if (this.y < 32) this.y = 32;
         if (this.y > 384 - 32) this.y = 384 - 32;
         move();
+        if(isPlantBomb) {
+            Bomb b = new Bomb(this.x/Sprite.SCALED_SIZE, this.y/Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
+            BombermanGame.getStillObject().add(b);
+            isPlantBomb = false;
+        }
+        if(isIsMove) {
+            a.update();
+            this.img = a.getFrame().getFxImage();
+        }
     }
 }

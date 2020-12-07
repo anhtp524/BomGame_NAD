@@ -31,6 +31,7 @@ public class BombermanGame extends Application {
     private static List<Entity> stillObjects = new ArrayList<>();
     private static String [][] map;
     private static List<Entity> grass = new ArrayList<>();
+    private static  List<Entity> item = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -118,43 +119,33 @@ public class BombermanGame extends Application {
                 Entity object;
                 Entity obj;
                 String t = map[row][col];
+                obj = new Grass(col, row, Sprite.grass.getFxImage());
+                grass.add(obj);
                 if ( t.equals("#")) {
-                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Wall(col, row, Sprite.wall.getFxImage());
-                    grass.add(obj);
                     stillObjects.add(object);
                 }
                 else if (t.equals("*")){
-                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Brick(col, row, Sprite.brick.getFxImage());
-                    grass.add(obj);
                     stillObjects.add(object);
                 }
                 else if (t.equals("x")){
-                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Portal(col, row, Sprite.portal.getFxImage());
-                    grass.add(obj);
                     stillObjects.add(object);
 
                 }
                 else if (t.equals("1")){
-                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Ballom(col, row, Sprite.balloom_left2.getFxImage());
-                    grass.add(obj);
                     stillObjects.add(object);
 
                 }
                 else if (t.equals("2")){
-                    obj = new Grass(col, row, Sprite.grass.getFxImage());
                     object = new Oneal(col, row, Sprite.oneal_left2.getFxImage());
-                    grass.add(obj);
                     stillObjects.add(object);
-
                 }
-                else {
-                    obj = new Grass(col, row, Sprite.grass.getFxImage());
-
-                    grass.add(obj);
+                else if (t.equals("f")) {
+                    object = new Flame(col, row, Sprite.powerup_flames.getFxImage());
+                    stillObjects.add((object));
                 }
 
 
@@ -163,7 +154,7 @@ public class BombermanGame extends Application {
     }
 
 
-    public void update() {
+    public void update()  {
         entities.forEach(Entity::update);
         stillObjects.forEach(Entity::update);
     }

@@ -53,7 +53,6 @@ public class Bomber extends Entity {
                 isMoveUp = false;
             }
             if (keyEvent.getCode() == keyCode.DOWN || keyEvent.getCode() == keyCode.S) {
-                //this.img = Sprite.player_down.getFxImage();
                 isMoveDown = false;
             }
             if (keyEvent.getCode() == keyCode.SPACE || keyEvent.getCode() == keyCode.ENTER) {
@@ -67,7 +66,7 @@ public class Bomber extends Entity {
         if(isMoveDown) {
             if(down == 1) this.img = Sprite.player_down.getFxImage();
             else if(down == 2) this.img = Sprite.player_down_1.getFxImage();
-            else if(down == 4) {
+            else if(down == 3) {
                 this.img = Sprite.player_down_2.getFxImage();
                 down = 1;
             }
@@ -81,7 +80,7 @@ public class Bomber extends Entity {
         else if(isMoveUp) {
             if(up == 1) this.img = Sprite.player_up.getFxImage();
             else if(up == 2) this.img = Sprite.player_up_1.getFxImage();
-            else if(up == 4) {
+            else if(up == 3) {
                 this.img = Sprite.player_up_2.getFxImage();
                 up = 1;
             }
@@ -94,8 +93,7 @@ public class Bomber extends Entity {
         else if(isMoveLeft) {
             if(left == 1) this.img = Sprite.player_left.getFxImage();
             else if(left == 2) this.img = Sprite.player_left_1.getFxImage();
-            else if (left == 3) this.img = Sprite.player_left.getFxImage();
-            else if(left == 4) {
+            else if (left == 3) {
                 this.img = Sprite.player_left_2.getFxImage();
                 left = 1;
             }
@@ -108,8 +106,7 @@ public class Bomber extends Entity {
         else if(isMoveRight) {
             if(right == 1) this.img = Sprite.player_right.getFxImage();
             else if(right == 2) this.img = Sprite.player_right_1.getFxImage();
-            else if (right == 3) this.img = Sprite.player_right.getFxImage();
-            else if(right == 4) {
+            else if (right == 3) {
                 this.img = Sprite.player_right_2.getFxImage();
                 right = 1;
             }

@@ -28,7 +28,7 @@ public class BombermanGame extends Application {
     private static int time = 0;
 
     private List<Entity> entities = new ArrayList<>();
-    private static List<Entity> stillObjects = new ArrayList<>();
+    public static List<Entity> stillObjects = new ArrayList<>();
     private static String [][] map;
     private static List<Entity> grass = new ArrayList<>();
     private static  List<Entity> item = new ArrayList<>();
@@ -118,6 +118,7 @@ public class BombermanGame extends Application {
             for ( int col = 0 ; col < WIDTH ; col++) {
                 Entity object;
                 Entity obj;
+                Entity it;
                 String t = map[row][col];
                 obj = new Grass(col, row, Sprite.grass.getFxImage());
                 grass.add(obj);
@@ -144,8 +145,8 @@ public class BombermanGame extends Application {
                     stillObjects.add(object);
                 }
                 else if (t.equals("f")) {
-                    object = new Flame(col, row, Sprite.powerup_flames.getFxImage());
-                    stillObjects.add((object));
+                    it = new Flame(col, row, Sprite.powerup_flames.getFxImage());
+                    item.add(it);
                 }
 
 
@@ -155,13 +156,18 @@ public class BombermanGame extends Application {
 
 
     public void update()  {
-        entities.forEach(Entity::update);
-        stillObjects.forEach(Entity::update);
+        for (Entity entity : entities) {
+            entity.update();
+        }
+        for (Entity stillObject : stillObjects) {
+            stillObject.update();
+        }
     }
 
     public void render() {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             grass.forEach(g -> g.render(gc));
+            item.forEach(g -> g.render(gc));
             stillObjects.forEach(g -> g.render(gc));
             entities.forEach(g -> g.render(gc));
     }

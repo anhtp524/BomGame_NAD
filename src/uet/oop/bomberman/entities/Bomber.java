@@ -21,7 +21,11 @@ public class Bomber extends Entity {
         super( x, y, img);
     }
     KeyCode keyCode;
-    public double step = 2;
+    public double stepup = 2;
+    public double stepdown = 2;
+    public double stepleft = 2;
+    public double stepright = 2;
+
 
     public void input() {
         BombermanGame.scene.setOnKeyPressed(keyEvent -> {
@@ -40,7 +44,8 @@ public class Bomber extends Entity {
             if (keyEvent.getCode() == keyCode.SPACE || keyEvent.getCode() == keyCode.ENTER ) {
                 isPlantBomb = true;
             }
-        });
+        }
+        );
         BombermanGame.scene.setOnKeyReleased(keyEvent -> {
             if (keyEvent.getCode() == keyCode.LEFT || keyEvent.getCode() == keyCode.A) {
                 this.img = Sprite.player_left.getFxImage();
@@ -61,31 +66,43 @@ public class Bomber extends Entity {
             if (keyEvent.getCode() == keyCode.SPACE || keyEvent.getCode() == keyCode.ENTER) {
                 isPlantBomb = false;
             }
-        });
+        }
+        );
     }
 
     public void move() {
         isIsMove = false;
-        if(isMoveDown) {
-            a.setFrames(framedown);
-            this.y ++;
-            isIsMove = true;
+        if (isMoveDown) {
+                a.setFrames(framedown);
+                this.y+= stepdown;
+                stepright =2;
+                stepleft =2;
+                stepup =2;
+                isIsMove = true;
+        } else if (isMoveUp) {
+                a.setFrames(frameup);
+                this.y-= stepup;
+                stepleft =2;
+                stepright = 2;
+                stepdown =2;
+                isIsMove = true;
+
+        } else if (isMoveLeft) {
+                a.setFrames(frameleft);
+                this.x-= stepleft;
+                stepright =2;
+                stepdown =2;
+                stepup =2;
+                isIsMove = true;
+        } else if (isMoveRight) {
+                a.setFrames(frameright);
+                this.x+= stepright;
+                stepleft =2 ;
+                stepup =2;
+                stepdown =2;
+                isIsMove = true;
         }
-        else if(isMoveUp) {
-            a.setFrames(frameup);
-            this.y --;
-            isIsMove = true;
-        }
-        else if(isMoveLeft) {
-            a.setFrames(frameleft);
-            this.x --;
-            isIsMove = true;
-        }
-        else if(isMoveRight) {
-            a.setFrames(frameright);
-            this.x ++;
-            isIsMove = true;
-        }
+
     }
     @Override
     public void update() {
@@ -95,6 +112,36 @@ public class Bomber extends Entity {
         if (this.y < 32) this.y = 32;
         if (this.y > 384 - 32) this.y = 384 - 32;
         move();
+        for (Entity st : BombermanGame.stillObjects) {
+
+                if (check(st) && isMoveRight) {
+                    stepright = 0;
+                    stepup = 2;
+                    stepdown = 2;
+                    stepleft = 2;
+                } else if (check(st) && isMoveLeft) {
+                    stepright = 2;
+                    stepup = 2;
+                    stepdown = 2;
+                    stepleft = 0;
+
+                } else if (check(st) && isMoveUp) {
+                    stepright = 2;
+                    stepup = 0;
+                    stepdown = 2;
+                    stepleft = 2;
+
+                } else if (check(st) && isMoveDown) {
+                    stepright = 2;
+                    stepup = 2;
+                    stepdown = 0;
+                    stepleft = 2;
+
+                }
+
+
+
+        }
         if(isPlantBomb) {
             Bomb b = new Bomb(this.x/Sprite.SCALED_SIZE, this.y/Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
             BombermanGame.getStillObject().add(b);

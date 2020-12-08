@@ -17,6 +17,8 @@ public abstract class Entity {
 
     protected Image img;
 
+
+
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
     public Entity( int xUnit, int yUnit, Image img) {
         this.x = xUnit * Sprite.SCALED_SIZE;
@@ -28,4 +30,16 @@ public abstract class Entity {
         gc.drawImage(img, x, y);
     }
     public abstract void update();
+
+    public boolean check(Entity e) {
+        int sumX =  this.x +32;
+        int sumY = this.y + 32;
+        if(Math.abs(e.x - this.x) == 32 && e.y == this.y) {
+            return true;
+        }
+        else if (Math.abs(e.y - this.y) ==32 && e.x == this.x) {
+            return true;
+        }
+        return false;
+    }
 }

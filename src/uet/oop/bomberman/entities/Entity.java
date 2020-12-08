@@ -17,7 +17,21 @@ public abstract class Entity {
 
     protected Image img;
 
+    public Entity(){
 
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
+    }
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
     public Entity( int xUnit, int yUnit, Image img) {

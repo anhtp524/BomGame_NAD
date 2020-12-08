@@ -1,13 +1,18 @@
 package uet.oop.bomberman.entities;
 
+import com.sun.javaws.IconUtil;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.graphics.Animation;
+import uet.oop.bomberman.graphics.SpriteSheet;
 
 public class Bomber extends Entity {
     public static boolean isIsMove = false;
+    public Bomb bomb= new Bomb();
+    public int hasplated = 0;
+
 
 
     private final Sprite [] frameleft = {Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2};
@@ -25,6 +30,9 @@ public class Bomber extends Entity {
     public double stepdown = 2;
     public double stepleft = 2;
     public double stepright = 2;
+
+    public int xbomb=1;
+    public int ybomb =1;
 
 
     public void input() {
@@ -64,12 +72,60 @@ public class Bomber extends Entity {
                 isMoveDown = false;
             }
             if (keyEvent.getCode() == keyCode.SPACE || keyEvent.getCode() == keyCode.ENTER) {
+                xbomb = this.x/Sprite.SCALED_SIZE;
+                ybomb=this.y/ Sprite.SCALED_SIZE;
+                bomb.setIsexplode(false);
                 isPlantBomb = false;
+                hasplated++;
             }
         }
         );
     }
 
+    public void PlantBomb(){
+        if(isPlantBomb) {
+            bomb = new Bomb(this.x/Sprite.SCALED_SIZE,y/Sprite.SCALED_SIZE,Sprite.bomb.getFxImage());
+            BombermanGame.stillObjects.add(bomb);
+            bomb.setIsexplode(false);
+        }
+    }
+    public void explode(){
+        int xx=xbomb;
+        int yy = ybomb;
+        Flame flameR = new Flame(xx+1,yy,Sprite.explosion_horizontal_right_last.getFxImage());
+        Flame flameL = new Flame(xx-1,yy,Sprite.explosion_horizontal_left_last.getFxImage());
+        Flame flameU = new Flame(xx,yy-1,Sprite.explosion_vertical_top_last.getFxImage());
+        Flame flameD = new Flame(xx,yy+1,Sprite.explosion_vertical_down_last1.getFxImage());
+        Flame flameC = new Flame(xx,yy,Sprite.bomb_exploded1.getFxImage());
+        BombermanGame.stillObjects.add(flameC);
+        BombermanGame.stillObjects.add(flameD);
+        BombermanGame.stillObjects.add(flameL);
+        BombermanGame.stillObjects.add(flameR);
+        BombermanGame.stillObjects.add(flameU);
+    }
+
+    public void exploding() {
+        if(hasplated>0){
+            if (bomb.isexplode) {
+                explode();
+                bomb.isexplode=false;
+            } else {
+                if (bomb.time2explode > 50) {
+                    bomb.time2explode--;
+                    bomb.isexplode = false;
+                    System.out.println(bomb.time2explode);
+                    System.out.println(bomb.isexplode);
+                } else if (bomb.time2explode <= 50 && bomb.time2explode > 0) {
+                    bomb.isexplode = true;
+                    bomb.time2explode--;
+                    System.out.println(bomb.time2explode);
+                    System.out.println(bomb.isexplode);
+                } else {
+                    bomb.isexplode = false;
+                }
+            }
+        }
+    }
     public void move() {
         isIsMove = false;
         if (isMoveDown) {
@@ -138,18 +194,12 @@ public class Bomber extends Entity {
                     stepleft = 2;
 
                 }
-
-
-
-        }
-        if(isPlantBomb) {
-            Bomb b = new Bomb(this.x/Sprite.SCALED_SIZE, this.y/Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
-            BombermanGame.getStillObject().add(b);
-            isPlantBomb = false;
         }
         if(isIsMove) {
             a.update();
             this.img = a.getFrame().getFxImage();
         }
+        PlantBomb();
+        exploding();
     }
 }
